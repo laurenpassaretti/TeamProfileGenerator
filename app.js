@@ -38,6 +38,7 @@ let currentEmployee
 
 //First prompt
 function promptUserGeneral() {
+
     return inquirer.prompt([
         {
             type: "input",
@@ -64,25 +65,123 @@ function promptUserGeneral() {
                 "Intern"
             ]
         },
+     
 
     ]).then(answers => {
-        
+
         console.log(answers);
         currentEmployee = answers
 
         if (answers.employeeType === "Manager") {
-            promptUserManager(); 
+            // promptUserManager();
+            async function promptUserAdd() {
+                try {
+                    const answers = await promptUserManager();
+            
+                    return inquirer.prompt([
+                        {
+                            type: "input",
+                            name: "addEmployee",
+                            message: "Would you like to add another employee?",
+                            choices: [
+                                "Yes",
+                                "No"
+                            ],
+                        }]).then(answers => {
+                            console.log(answers)
+                            currentEmployee = answers
+                            if (answers.addEmployee === "yes") {
+                                promptUserGeneral()
+                            } else {
+                                // fs.writeFile(`./output/teamProfile.html`, render(answers), function () {
+                                //     console.log("Successfully wrote file");
+                                // })
+            
+                            }
+            
+                        })
+            
+                } catch (err) {
+                    console.log(err);
+                };
+            }
+            promptUserAdd()
 
-    } else if (answers.employeeType === "Engineer") {
 
-        promptUserEngineer();
-    } else if (answers.employeeType === "Intern") {
+        } else if (answers.employeeType === "Engineer") {
 
-        promptUserIntern();
-    }
-})
+            async function promptUserAdd() {
+                try {
+                    const answers = await promptUserEngineer();
+            
+                    return inquirer.prompt([
+                        {
+                            type: "input",
+                            name: "addEmployee",
+                            message: "Would you like to add another employee?",
+                            choices: [
+                                "Yes",
+                                "No"
+                            ],
+                        }]).then(answers => {
+                            console.log(answers)
+                            currentEmployee = answers
+                            if (answers.addEmployee === "yes") {
+                                promptUserGeneral()
+                            } else {
+                                // fs.writeFile(`./output/teamProfile.html`, render(answers), function () {
+                                //     console.log("Successfully wrote file");
+                                // })
+            
+                            }
+            
+                        })
+            
+                } catch (err) {
+                    console.log(err);
+                };
+            }
 
-}
+        } else if (answers.employeeType === "Intern") {
+
+            async function promptUserAdd() {
+                try {
+                    const answers = await promptUserIntern();
+            
+                    return inquirer.prompt([
+                        {
+                            type: "input",
+                            name: "addEmployee",
+                            message: "Would you like to add another employee?",
+                            choices: [
+                                "Yes",
+                                "No"
+                            ],
+                        }]).then(answers => {
+                            console.log(answers)
+                            currentEmployee = answers
+                            if (answers.addEmployee === "yes") {
+                                promptUserGeneral()
+                            } else {
+                                // fs.writeFile(`./output/teamProfile.html`, render(answers), function () {
+                                //     console.log("Successfully wrote file");
+                                // })
+            
+                            }
+            
+                        })
+            
+                } catch (err) {
+                    console.log(err);
+                };
+            }
+
+        }
+
+
+
+    })
+};
 //Option 1
 function promptUserManager() {
     return inquirer.prompt([
@@ -92,10 +191,10 @@ function promptUserManager() {
             message: "What is your Office Number?"
         },
 
-    ]).then(answers => { 
+    ]).then(answers => {
         //render Manager
         let managerVar = new Manager(answers.officeNumber, currentEmployee.name, currentEmployee.id, currentEmployee.email)
-        fs.writeFile(`./output/${managerVar.name}.html`, render([managerVar]), function(){
+        fs.appendFileSync(`./output/teamProfile.html`, render([managerVar]), function () {
             console.log("Successfully created manager profile")
         })
         console.log(managerVar);
@@ -112,7 +211,7 @@ function promptUserEngineer() {
     ]).then(answers => {
         // render(Engineer)
         var engineerVar = new Engineer(answers.GitHub, currentEmployee.name, currentEmployee.id, currentEmployee.email)
-        fs.writeFile(`./output/${engineerVar}.html`,render([engineerVar])), function(){
+        fs.appendFile(`./output/teamProfile.html`, render([engineerVar])), function () {
             console.log("Successfully created engineer profile")
         }
         console.log(answers);
@@ -129,16 +228,116 @@ function promptUserIntern() {
     ]).then(answers => {
         //render Intern
         var internVar = new Intern(answers.school, currentEmployee.name, currentEmployee.id, currentEmployee.email)
-        fs.writeFile(`./output/${internVar}.html`, render([internVar]), function(){
+        fs.appendFile(`./output/teamProfile.html`, render([internVar]), function () {
             console.log("Successfully created intern profile")
         })
-     
+
         console.log(answers);
     })
-}
+};
+promptUserGeneral(); 
+// async function promptUserAdd() {
+//     try {
+//         const answers = await promptUserGeneral();
 
-promptUserGeneral();
+//         return inquirer.prompt([
+//             {
+//                 type: "input",
+//                 name: "addEmployee",
+//                 message: "Would you like to add another employee?",
+//                 choices: [
+//                     "Yes",
+//                     "No"
+//                 ],
+//             }]).then(answers => {
+//                 console.log(answers)
+//                 currentEmployee = answers
+//                 if (answers.addEmployee === "yes") {
+//                     promptUserGeneral()
+//                 } else {
+//                     fs.writeFile(`./output/teamProfile.html`, render(answers), function () {
+//                         console.log("Successfully wrote file");
+//                     })
 
+//                 }
 
+//             })
 
+//     } catch (err) {
+//         console.log(err);
+//     };
+// }
+// promptUserAdd(); 
+// function promptUserAdd(){
+// return inquirer.prompt([
+//     {
+//         type: "input",
+//         name: "addEmployee",
+//         message: "Would you like to add another employee?",
+//         choices: [
+//             "Yes",
+//             "No"
+//         ],
+//     }]).then(answers => {
+//         console.log(answers)
+//         currentEmployee = answers
+//         if (answers.addEmployee === "yes") {
+//             promptUserGeneral()
+//         } else {
+//             fs.writeFile(`./output/teamProfile.html`, render(answers), function () {
+//                 console.log("Successfully wrote file");
+//             })
 
+            //             }
+
+            //         })
+
+            //     } 
+
+            
+           
+
+// async function promptUserAdd() {
+//     console.log("hi");
+//     try {
+//         const answers = await promptUserGeneral();
+//         return inquirer.prompt([
+//             {
+//                 type: "input",
+//                 name: "addEmployee",
+//                 message: "Would you like to add another employee?",
+//                 choices: [
+//                     "Yes",
+//                     "No"
+//                 ],
+//             }
+//         ])
+//     }
+// };
+
+// async function promptUserAdd() {
+//     try {
+//         const answers = await promptUserGeneral();
+//         return inquirer.prompt([
+//             {
+//                 type: "input",
+//                 name: "addEmployee",
+//                 message: "Would you like to add another employee?",
+//                 choices: [
+//                     "Yes",
+//                     "No"
+//                 ],
+//             }])
+
+//         console.log(answers)
+//         currentEmployee = answers
+//         if (answers.addEmployee === "yes") {
+//             promptUserGeneral()
+//         } else {
+//             fs.writeFile(`./output/teamProfile.html`, render(answers), function () {
+//                 console.log("Successfully wrote file");
+//             })
+
+//         }
+
+//     }}}
