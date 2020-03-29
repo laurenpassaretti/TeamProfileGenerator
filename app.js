@@ -1,13 +1,12 @@
-// const Manager = require("./lib/Manager");
-// const Engineer = require("./lib/Engineer");
-// const Intern = require("./lib/Intern");
+const Manager = require("./lib/Manager");
+const Engineer = require("./lib/Engineer");
+const Intern = require("./lib/Intern");
 const inquirer = require("inquirer");
-// const path = require("path");
-// const fs = require("fs");
-// const OUTPUT_DIR = path.resolve(__dirname, "output")
-// const outputPath = path.join(OUTPUT_DIR, "team.html");
-// ​
-// const render = require("./lib/htmlRenderer");
+const path = require("path");
+const fs = require("fs");
+const OUTPUT_DIR = path.resolve(__dirname, "output")
+const outputPath = path.join(OUTPUT_DIR, "team.html");
+const render = require("./lib/htmlRenderer");
 
 
 // Write code to use inquirer to gather information about the development team members,
@@ -32,41 +31,12 @@ const inquirer = require("inquirer");
 // for further information. Be sure to test out each class and verify it generates an 
 // object with the correct structure and methods. This structure will be crucial in order
 // for the provided `render` function to work!```
-function promptUserManager() {
-    return inquirer.prompt([
-        {
-            type: "input",
-            name: "officeNumber",
-            message: "What is your Office Number?"
-        },
 
-    ]).then(answers => {
-        console.log(answers);
-    });
-}
+//globals
+let employees = []
+let currentEmployee
 
-function promptUserEngineer() {
-    return inquirer.prompt([
-        {
-            type: "input",
-            name: "GitHub",
-            message: "What is your GitHub username?"
-        },
-    ]).then(answers => {
-        console.log(answers);
-    });
-}
-function promptUserIntern() {
-    return inquirer.prompt([
-        {
-            type: "input",
-            name: "school",
-            message: "What School do you attend?"
-        },
-    ]).then(answers => {
-        console.log(answers);
-    })
-}
+//First prompt
 function promptUserGeneral() {
     return inquirer.prompt([
         {
@@ -96,7 +66,9 @@ function promptUserGeneral() {
         },
 
     ]).then(answers => {
+        
         console.log(answers);
+        currentEmployee = answers
 
         if (answers.employeeType === "Manager") {
             promptUserManager(); 
@@ -111,8 +83,62 @@ function promptUserGeneral() {
 })
 
 }
+//Option 1
+function promptUserManager() {
+    return inquirer.prompt([
+        {
+            type: "input",
+            name: "officeNumber",
+            message: "What is your Office Number?"
+        },
+
+    ]).then(answers => { 
+        //render Manager
+        let managerVar = new Manager(answers.officeNumber, currentEmployee.name, currentEmployee.id, currentEmployee.email)
+        fs.writeFile(`./output/${managerVar.name}.html`, render([managerVar]), function(){
+            console.log("Successfully created manager profile")
+        })
+        console.log(managerVar);
+    });
+}
+//Option 2
+function promptUserEngineer() {
+    return inquirer.prompt([
+        {
+            type: "input",
+            name: "GitHub",
+            message: "What is your GitHub username?"
+        },
+    ]).then(answers => {
+        // render(Engineer)
+        var engineerVar = new Engineer(answers.GitHub, currentEmployee.name, currentEmployee.id, currentEmployee.email)
+        fs.writeFile(`./output/${engineerVar}.html`,render([engineerVar])), function(){
+            console.log("Successfully created engineer profile")
+        }
+        console.log(answers);
+    });
+}
+//Option 3
+function promptUserIntern() {
+    return inquirer.prompt([
+        {
+            type: "input",
+            name: "school",
+            message: "What School do you attend?"
+        },
+    ]).then(answers => {
+        //render Intern
+        var internVar = new Intern(answers.school, currentEmployee.name, currentEmployee.id, currentEmployee.email)
+        fs.writeFile(`./output/${internVar}.html`, render([internVar]), function(){
+            console.log("Successfully created intern profile")
+        })
+     
+        console.log(answers);
+    })
+}
+
 promptUserGeneral();
 
 
 
-//engineer
+
